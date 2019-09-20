@@ -1,0 +1,79 @@
+#include <LiquidCrystal.h>
+#include <Keypad.h>
+
+int volume = 40;
+String light = "+++";
+// initialize the library by associating any needed LCD interface pin
+// with the arduino pin number it is connected to
+const int rs = A0, en = A1, d4 = A2, d5 = A3, d6 = A4, d7 = A5;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+const byte ROWS = 4; //four rows
+const byte COLS = 4; //four columns
+//define the cymbols on the buttons of the keypads
+char hexaKeys[ROWS][COLS] = {
+  {'0','1','2','3'},
+  {'4','5','6','7'},
+  {'8','9','A','B'},
+  {'C','D','E','F'}
+};
+byte rowPins[ROWS] = {3, 2, 9, 8}; //connect to the row pinouts of the keypad
+byte colPins[COLS] = {7, 6, 5, 4}; //connect to the column pinouts of the keypad
+
+//initialize an instance of class NewKeypad
+Keypad customKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); 
+
+void setup() {
+  // set up the LCD's number of columns and rows:
+  lcd.begin(16, 2);
+  // Print a message to the LCD.
+  Serial.begin(9600);
+}
+
+void loop() {
+  // set the cursor to column 0, line 1
+  // (note: line 1 is the second row, since counting begins with 0):
+ // lcd.setCursor(0, 1);
+  // print the number of seconds since reset:
+  //lcd.print(millis() / 1000);
+  
+  char customKey = customKeypad.getKey();
+  lcd.setCursor(0,0);
+  switch (customKey){
+    case '0':
+    lcd.clear();
+    break;
+    case '1':
+    lcd.clear();
+    lcd.print("Menu");
+    break;
+    case '3':
+    lcd.clear();
+    volume ++;
+    if (volume>100){
+      volume=100;
+    }
+    lcd.print("Volume ");
+    lcd.print( volume);
+    break;
+    case '7':
+    lcd.clear();
+    volume --;
+    if (volume<0){
+      volume=0;
+    }
+    lcd.print("Volume ");
+    lcd.print( volume);
+    break;
+    case 'A':
+    lcd.clear();
+    light = light + '+';
+    lcd.print("Light ");
+    lcd.print(light);
+    case 'B':
+    lcd.clear();
+    
+    lcd.print("Light ");
+    lcd.print(light);
+  }
+  
+}
